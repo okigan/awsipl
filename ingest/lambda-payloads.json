@@ -1,0 +1,13 @@
+{
+    "ingest": {
+        "lambda": {
+            "operation": "create",
+            "tableName": "awsipl_source",
+            "payload": {
+                "Item": {
+                    "source_file_id": "a",
+                    "path": "s3://awsipl/aws-logo-100584713-primary.idge.jpg"
+                }
+            }
+        }
+    }
