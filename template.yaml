@@ -1,6 +1,11 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: An awsipl Serverless Specification template.
+
+Globals:
+    Function:
+        Timeout: 15
+
 Resources:
 
   process:
@@ -10,7 +15,9 @@ Resources:
       Runtime: nodejs4.3
       Description: ''
       MemorySize: 512
-      Timeout: 15
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          PARAM1: VALUE
       Events:
         LambdaMicroservice:
           Type: Api
@@ -32,7 +39,6 @@ Resources:
       Runtime: nodejs4.3
       Description: ''
       MemorySize: 512
-      Timeout: 15
       Events:
         LambdaMicroservice:
           Type: Api
@@ -54,8 +60,22 @@ Resources:
       Runtime: nodejs6.10
       Description: ''
       MemorySize: 128
-      Timeout: 15
-      
+
+  echo:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: echo/index.handler
+      Runtime: nodejs6.10
+      Description: ''
+      MemorySize: 128
+      Policies:
+      Events:
+        LambdaMicroservice:
+          Type: Api
+          Properties:
+            Path: /echo
+            Method: ANY
+
   convert:
     Type: 'AWS::Serverless::Function'
     Properties:
@@ -63,7 +83,6 @@ Resources:
       Runtime: nodejs6.10
       Description: ''
       MemorySize: 128
-      Timeout: 15
       Policies:
         - S3CrudPolicy:
             BucketName: 'awsipl'
@@ -127,3 +146,18 @@ Resources:
        ProvisionedThroughput:
          ReadCapacityUnits: 5
          WriteCapacityUnits: 5
+
+
+Outputs:
+
+    HelloWorldApi:
+      Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+      Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+
+    convertFunction:
+      Description: "Hello World Lambda Function ARN"
+      Value: !GetAtt convert.Arn
+
+    convertFunctionIamRole:
+      Description: "Implicit IAM Role created for Hello World function"
+      Value: !GetAtt convertFunctionRole.Arn
