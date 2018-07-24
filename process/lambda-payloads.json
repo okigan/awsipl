@@ -1,0 +1,11 @@
+{
+    "process": {
+        "lambda": {
+            "operation": "resizeS3",
+            "source": "s3://awsipl/aws-logo-100584713-primary.idge.jpg",
+            "destination": "s3://awsipl/aws-logo-100584713-primary.idge.resized.jpg",
+            "width": 100,
+            "height": 100
+        }
+    }
+}
