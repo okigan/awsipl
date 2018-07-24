@@ -153,12 +153,24 @@ Resources:
          WriteCapacityUnits: 5
 
   awsiplConfigTable:
-     Type: AWS::Serverless::SimpleTable
+     Type: AWS::DynamoDB::Table
      Properties:
        TableName: awsipl_config
-       PrimaryKey:
-         Name: image_type
-         Type: String
+       AttributeDefinitions:
+         -
+           AttributeName: "image_type"
+           AttributeType: "S"
+         -
+           AttributeName: "recipe_id"
+           AttributeType: "N"
+       KeySchema:
+         -
+           AttributeName: "image_type"
+           KeyType: "HASH"
+         -
+           AttributeName: "recipe_id"
+           KeyType: "RANGE"
+
        ProvisionedThroughput:
          ReadCapacityUnits: 5
          WriteCapacityUnits: 5
