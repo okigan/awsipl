@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "aws-sdk": "^2.270.1"
+    "aws-sdk": "^2.270.1",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {},
   "scripts": {

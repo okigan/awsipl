@@ -8,6 +8,9 @@ const aws = require('aws-sdk');
 const s3 = new aws.S3({ apiVersion: '2006-03-01' });
 const lambda = new aws.Lambda();
 
+const uuidv4 = require('uuid/v4');
+
+
 let environment = process.env.NODE_ENV;
 let convertArn = process.env.CONVERT_ARN;
 
@@ -30,6 +33,7 @@ exports.handler = (event, context, callback) => {
 
     switch (operation) {
         case 'create':
+            payload.source_file_id = uuidv4();
             dynamo.putItem(payload, callback);
             break;
         case 'read':
@@ -53,13 +57,13 @@ exports.handler = (event, context, callback) => {
         default:
             callback(new Error(`Unrecognized operation "${operation}"`));
     }
-    
-    var request = {
-            "source": "s3://awsipl/aws-logo-100584713-primary.idge.jpg",
-            "destination": "s3://awsipl/aws-logo-100584713-primary.idge.resized.from_lambda.jpg"
-        };
 
-    var params = {
+    const request = {
+        "source": "s3://awsipl/aws-logo-100584713-primary.idge.jpg",
+        "destination": "s3://awsipl/aws-logo-100584713-primary.idge.resized.from_lambda.jpg"
+    };
+
+    const params = {
         ClientContext: "MyApp",
         FunctionName: "arn:aws:lambda:us-east-1:073856810203:function:cloud9-awsipl-convert-11J40S1TCVGVY",
         InvocationType: "Event",
@@ -76,13 +80,5 @@ exports.handler = (event, context, callback) => {
         else {
             console.log(data); // successful response
         }
-        /*
-        data = {
-         FunctionError: "", 
-         LogResult: "", 
-         Payload: <Binary String>, 
-         StatusCode: 123
-        }
-        */
     });
 };
