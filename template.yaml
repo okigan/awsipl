@@ -15,7 +15,7 @@ Resources:
       Runtime: nodejs4.3
       Description: ''
       MemorySize: 512
-      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+      Environment:
         Variables:
           PARAM1: VALUE
       Events:
@@ -39,6 +39,9 @@ Resources:
       Runtime: nodejs4.3
       Description: ''
       MemorySize: 512
+      Environment:
+        Variables:
+          PARAM1: !GetAtt convert.Arn
       Events:
         LambdaMicroservice:
           Type: Api
@@ -86,7 +89,6 @@ Resources:
       Policies:
         - S3CrudPolicy:
             BucketName: 'awsipl'
-        # This is actually required otherwise I'm unable to create object
       Events:
         LambdaMicroservice:
           Type: Api
