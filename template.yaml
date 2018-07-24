@@ -71,6 +71,9 @@ Resources:
       Runtime: nodejs6.10
       Description: ''
       MemorySize: 128
+      Environment:
+        Variables:
+          CONVERT_ARN: !GetAtt convert.Arn
       Policies:
       Events:
         LambdaMicroservice:
