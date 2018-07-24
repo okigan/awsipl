@@ -24,6 +24,12 @@ let convertArn = process.env.CONVERT_ARN;
 exports.handler = (event, context, callback) => {
     console.log('Received event:', JSON.stringify(event, null, 2));
 
+    if (event.body != null) {
+        // api gateway
+        console.log('processing as api gateway message');
+        event = JSON.parse(event.body);
+    }
+
     const operation = event.operation;
     const payload = event.payload;
 
@@ -33,7 +39,7 @@ exports.handler = (event, context, callback) => {
 
     switch (operation) {
         case 'create':
-            payload.source_file_id = uuidv4();
+            payload.Item.source_file_id = uuidv4();
             dynamo.putItem(payload, callback);
             break;
         case 'read':
