@@ -7,10 +7,17 @@ exports.handler = (event, context, callback) => {
     console.log('value1 =', event.key1);
     console.log('value2 =', event.key2);
     console.log('value3 =', event.key3);
+
+    const result = {
+        timestamp: new Date(),
+        env: process.env
+    };
+
     callback(null, {
         statusCode: 200,
-        body: 'complete',
+        body: JSON.stringify(result),
+        headers: {"Content-Type": "application/json"},
         isBase64Encoded: false
-    });  // Echo back the first key value
-    //callback('Something went wrong');
+    });
+
 };
