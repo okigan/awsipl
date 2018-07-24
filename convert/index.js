@@ -3,7 +3,7 @@
 console.log('Loading function');
 
 const aws = require('aws-sdk');
-const s3 = new aws.S3({ apiVersion: '2006-03-01' });
+const s3 = new aws.S3({apiVersion: '2006-03-01'});
 const fs = require('fs');
 const sharp = require('sharp');
 const s3urls = require('@mapbox/s3urls');
@@ -40,17 +40,17 @@ exports.handler = (event, context, callback) => {
             console.log('processing as sqs message');
             // sns event
             event = JSON.parse(event.Records[0].body)
-        } 
+        }
     }
 
     console.log(JSON.stringify(event, null, 2));
 
-    var source = event.source;
-    var destination = event.destination;
-    var width = event.width || 100;
-    var height = event.height || 100;
-    var format = event.format || 'png';
-    var contentType = mapExt2MimeType(format);
+    const source = event.source;
+    const destination = event.destination;
+    const width = event.width || 100;
+    const height = event.height || 100;
+    const format = event.format || 'png';
+    const contentType = mapExt2MimeType(format);
 
     s3.getObject(s3urls.fromUrl(source))
         .promise()
@@ -66,8 +66,8 @@ exports.handler = (event, context, callback) => {
             ContentType: contentType,
         }).promise())
         .then(() => callback(null, {
-            statusCode: '200',
-            headers: { 'location': `somehost/${s3urls.fromUrl(destination).Key}` },
+            statusCode: 200,
+            headers: {'location': `somehost/${s3urls.fromUrl(destination).Key}`},
             body: 'complete',
             isBase64Encoded: false
         }))
