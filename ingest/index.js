@@ -12,7 +12,7 @@ const dynamo = new doc.DynamoDB();
 
 const aws = require('aws-sdk');
 // const dynamoDB = aws.DynamoDB({apiVersion: '2012-08-10'});
-const s3 = new aws.S3({apiVersion: '2006-03-01'});
+const s3 = new aws.S3({ apiVersion: '2006-03-01' });
 const lambda = new aws.Lambda();
 const stepfunctions = new aws.StepFunctions();
 
@@ -63,7 +63,7 @@ function handler(event, context, callback) {
                             };
 
                             const invokeParams = {
-                                ClientContext: JSON.stringify({calledFrom: context}),
+                                ClientContext: JSON.stringify({ calledFrom: context }),
                                 FunctionName: convertArn,
                                 InvocationType: 'Event',
                                 LogType: 'Tail',
@@ -102,9 +102,8 @@ function handler(event, context, callback) {
 
 
                 })
-                .then(() => callback(null, {statusCode: 200, body: 'done'}))
-                .catch(err => callback(err))
-            ;
+                .then(() => callback(null, { statusCode: 200, body: 'done' }))
+                .catch(err => callback(err));
             break;
         case 'read':
             dynamo.getItem(payload, callback);
@@ -116,7 +115,11 @@ function handler(event, context, callback) {
             dynamo.deleteItem(payload, callback);
             break;
         case 'list':
-            dynamo.scan(payload, callback);
+            dynamo
+                .scan(payload)
+                .promise()
+                .then(data => callback(null, { statusCode: 200, body: JSON.stringify(data) }))
+                .catch(err => callback(err));
             break;
         case 'echo':
             callback(null, payload);
@@ -137,5 +140,3 @@ function handler(event, context, callback) {
  *   - payload: a parameter to pass to the operation being performed
  */
 exports.handler = handler;
-
-

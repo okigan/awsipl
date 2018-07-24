@@ -1,0 +1,6 @@
+{
+  "operation": "list",
+  "payload": {
+    "TableName": "awsipl_source"
+  }
+}
