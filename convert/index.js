@@ -66,12 +66,20 @@ exports.handler = (event, context, callback) => {
             Body: buffer,
             ContentType: contentType,
         }).promise())
-        .then(() => callback(null, {
-            statusCode: 200,
-            headers: {'location': `somehost/${s3urls.fromUrl(destination).Key}`},
-            body: 'complete',
-            isBase64Encoded: false
-        }))
-        .catch(err => callback(err));
+        .then(() => {
 
+            const params = {
+                Bucket: s3urls.fromUrl(destination).Bucket,
+                Key: s3urls.fromUrl(destination).Key
+            };
+            const url = s3.getSignedUrl('getObject', params);
+
+            return callback(null, {
+                statusCode: 307,
+                headers: {'location': url},
+                body: 'complete',
+                isBase64Encoded: false
+            });
+        })
+        .catch(err => callback(err));
 };
