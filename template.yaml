@@ -42,6 +42,8 @@ Resources:
       Environment:
         Variables:
           CONVERT_ARN: !GetAtt convert.Arn
+      Policies:
+        - AmazonDynamoDBFullAccess
       Events:
         LambdaMicroservice:
           Type: Api
