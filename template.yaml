@@ -41,7 +41,7 @@ Resources:
       MemorySize: 512
       Environment:
         Variables:
-          PARAM1: !GetAtt convert.Arn
+          CONVERT_ARN: !GetAtt convert.Arn
       Events:
         LambdaMicroservice:
           Type: Api

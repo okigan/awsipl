@@ -8,6 +8,9 @@ const aws = require('aws-sdk');
 const s3 = new aws.S3({ apiVersion: '2006-03-01' });
 const lambda = new aws.Lambda();
 
+let environment = process.env.NODE_ENV;
+let convertArn = process.env.CONVERT_ARN;
+
 /**
  * Provide an event that contains the following keys:
  *
