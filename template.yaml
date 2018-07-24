@@ -1,7 +1,8 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
-Description: An AWS Serverless Specification template describing your function.
+Description: An awsipl Serverless Specification template.
 Resources:
+
   process:
     Type: 'AWS::Serverless::Function'
     Properties:
@@ -20,13 +21,11 @@ Resources:
     Type: 'AWS::Lambda::Permission'
     Properties:
       Action: 'lambda:InvokeFunction'
-      FunctionName:
-        'Fn::GetAtt':
-          - process
-          - Arn
+      FunctionName: !GetAtt process.Arn
       Principal: apigateway.amazonaws.com
       SourceArn:
         'Fn::Sub': 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/*/*'
+        
   ingest:
     Type: 'AWS::Serverless::Function'
     Properties:
@@ -45,13 +44,11 @@ Resources:
     Type: 'AWS::Lambda::Permission'
     Properties:
       Action: 'lambda:InvokeFunction'
-      FunctionName:
-        'Fn::GetAtt':
-          - process
-          - Arn
+      FunctionName: !GetAtt process.Arn
       Principal: apigateway.amazonaws.com
       SourceArn:
         'Fn::Sub': 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/*/*'
+
   download:
     Type: 'AWS::Serverless::Function'
     Properties:
@@ -60,6 +57,7 @@ Resources:
       Description: ''
       MemorySize: 128
       Timeout: 15
+      
   convert:
     Type: 'AWS::Serverless::Function'
     Properties:
@@ -83,6 +81,12 @@ Resources:
           Properties:
             Topic:
               Ref: convertTopic
+        SQS1:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt convertQueue.Arn
+            BatchSize: 1
+
   convertTopic:
     Type: 'AWS::SNS::Topic'
     Properties:
@@ -91,14 +95,38 @@ Resources:
         - Protocol: lambda
           Endpoint: !GetAtt convert.Arn
 
+  convertQueue:
+    Type: 'AWS::SQS::Queue'
+    Properties:
+      QueueName: 'awsiplconvert'
+
   convertPermission:
     Type: 'AWS::Lambda::Permission'
     Properties:
       Action: 'lambda:InvokeFunction'
-      FunctionName:
-        'Fn::GetAtt':
-          - convert
-          - Arn
+      FunctionName: !GetAtt convert.Arn
       Principal: apigateway.amazonaws.com
       SourceArn:
         'Fn::Sub': 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/*/*'
+
+  awsiplSourceTable:                   
+     Type: AWS::Serverless::SimpleTable
+     Properties:
+       TableName: awsipl_source
+       PrimaryKey:
+         Name: source_file_id
+         Type: String
+       ProvisionedThroughput:
+         ReadCapacityUnits: 5
+         WriteCapacityUnits: 5
+         
+  awsiplDerivativeTable:                   
+     Type: AWS::Serverless::SimpleTable
+     Properties:
+       TableName: awsipl_derivative
+       PrimaryKey:
+         Name: derivative_file_id
+         Type: String
+       ProvisionedThroughput:
+         ReadCapacityUnits: 5
+         WriteCapacityUnits: 5

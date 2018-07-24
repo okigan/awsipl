@@ -36,7 +36,11 @@ exports.handler = (event, context, callback) => {
             console.log('processing as sns message');
             // sns event
             event = JSON.parse(event.Records[0].Sns.Message)
-        }
+        } else if (event.Records[0].eventSource === 'aws:sqs') {
+            console.log('processing as sqs message');
+            // sns event
+            event = JSON.parse(event.Records[0].body)
+        } 
     }
 
     console.log(JSON.stringify(event, null, 2));
