@@ -24,7 +24,8 @@ function mapExt2MimeType(extention) {
 
 //https://github.com/awslabs/serverless-image-resizing/blob/master/lambda/index.js
 exports.handler = (event, context, callback) => {
-    log(JSON.stringify(arguments, null, 2));
+    console.log('event: ', JSON.stringify(event, null, 2));
+    console.log('context: ', JSON.stringify(context, null, 2));
 
     if (event.body != null) {
         // api gateway

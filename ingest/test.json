@@ -1,7 +1,7 @@
 {
   "operation": "create",
-  "tableName": "awsipl_source",
   "payload": {
+    "TableName": "awsipl_source",
     "Item": {
       "image_type": "sdp",
       "path": "s3://awsipl/aws-logo-100584713-primary.idge.jpg"

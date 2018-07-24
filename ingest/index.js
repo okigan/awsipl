@@ -34,10 +34,6 @@ function handler(event, context, callback) {
     const operation = event.operation;
     const payload = event.payload;
 
-    if (event.tableName) {
-        payload.TableName = event.tableName;
-    }
-
     switch (operation) {
         case 'create':
             const sourceFileId = uuidv4();
@@ -47,7 +43,7 @@ function handler(event, context, callback) {
                 .promise()
                 .then((a) => {
 
-                    const image_type = "sdp";
+                    const image_type = payload.Item.image_type;
 
                     const params = {
                         TableName: "awsipl_config",
@@ -88,7 +84,11 @@ function handler(event, context, callback) {
                                                 derivative_file_id: uuidv4(),
                                                 source_file_id: sourceFileId,
                                                 image_type: image_type,
-                                                destination: destination
+                                                destination: destination,
+                                                task: {
+                                                    invokeParams: invokeParams,
+                                                    requestId: data.$response.requestId
+                                                }
                                             }
                                         })
                                         .promise();
