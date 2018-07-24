@@ -152,6 +152,16 @@ Resources:
          ReadCapacityUnits: 5
          WriteCapacityUnits: 5
 
+  awsiplConfigTable:
+     Type: AWS::Serverless::SimpleTable
+     Properties:
+       TableName: awsipl_config
+       PrimaryKey:
+         Name: image_type
+         Type: String
+       ProvisionedThroughput:
+         ReadCapacityUnits: 5
+         WriteCapacityUnits: 5
 
 Outputs:
 

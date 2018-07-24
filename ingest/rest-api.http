@@ -1,0 +1,5 @@
+POST http://localhost:3000/ingest?a=b
+
+< /Users/iokulist/Github/okigan/awsipl/ingest/test.json
+
+###

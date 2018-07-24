@@ -1,6 +1,10 @@
 'use strict';
 
-console.log('Loading function');
+function log(message) {
+    console.log(message);
+}
+
+log('Loading function');
 
 const aws = require('aws-sdk');
 const s3 = new aws.S3({apiVersion: '2006-03-01'});
@@ -20,30 +24,26 @@ function mapExt2MimeType(extention) {
 
 //https://github.com/awslabs/serverless-image-resizing/blob/master/lambda/index.js
 exports.handler = (event, context, callback) => {
-
-
-    console.log(JSON.stringify(event, null, 2));
-    console.log(JSON.stringify(context, null, 2));
-    console.log(JSON.stringify(callback, null, 2));
+    log(JSON.stringify(arguments, null, 2));
 
     if (event.body != null) {
         // api gateway
-        console.log('processing as api gateway message');
+        log('processing as api gateway message');
         event = JSON.parse(event.body);
     }
     else if (event.Records != null) {
         if (event.Records[0].Sns != null) {
-            console.log('processing as sns message');
+            log('processing as sns message');
             // sns event
             event = JSON.parse(event.Records[0].Sns.Message)
         } else if (event.Records[0].eventSource === 'aws:sqs') {
-            console.log('processing as sqs message');
+            log('processing as sqs message');
             // sns event
             event = JSON.parse(event.Records[0].body)
         }
     }
 
-    console.log(JSON.stringify(event, null, 2));
+    log(JSON.stringify(event, null, 2));
 
     const source = event.source;
     const destination = event.destination;

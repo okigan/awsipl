@@ -1,0 +1,2 @@
+~/.local/bin/sam local start-api -n env.json --debug -d 5858
+
